@@ -29,16 +29,18 @@ struct AppView: View {
   @State var selectedTabScrollToTop: Int = -1
 
   var body: some View {
-    #if os(visionOS)
+    switch UIDevice.current.userInterfaceIdiom {
+    case .vision:
       tabBarView
-    #else
-      if UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
-      {
+    case .pad, .mac:
+      #if !os(visionOS)
         sidebarView
-      } else {
+      #else
         tabBarView
-      }
-    #endif
+      #endif
+    default:
+      tabBarView
+    }
   }
 
   var availableTabs: [AppTab] {
